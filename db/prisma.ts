@@ -1,33 +1,12 @@
-// db/prisma.ts
+import { PrismaClient } from "@prisma/client";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import { Pool } from "@neondatabase/serverless";
+import ws from "ws";
 
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { PrismaNeon } from '@prisma/adapter-neon';
-import { PrismaClient } from '@prisma/client';
-import ws from 'ws';
+// for Next.js or serverless
+globalThis.WebSocket = ws;
 
-neonConfig.webSocketConstructor = ws;
-
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error('❌ DATABASE_URL not found in environment variables.');
-}
-
-const pool = new Pool({ connectionString });
+const pool = new Pool({ connectionString: process.env.DATABASE_URL! });
 const adapter = new PrismaNeon(pool);
 
-export const prisma = new PrismaClient({ adapter }).$extends({
-  result: {
-    product: {
-      price: {
-        compute(product) {
-          return product.price.toString();
-        },
-      },
-      rating: {
-        compute(product) {
-          return product.rating.toString();
-        },
-      },
-    },
-  },
-});
+export const prisma = new PrismaClient({ adapter });
