@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { neonConfig } from '@neondatabase/serverless';
-// import { PrismaNeon } from '@prisma/adapter-neon';
+import { PrismaNeon } from '@prisma/adapter-neon';
 import { PrismaClient } from '@prisma/client';
 import ws from 'ws';
 
@@ -10,21 +10,21 @@ import ws from 'ws';
 neonConfig.webSocketConstructor = ws;
 
 // Ensure connection string is available
-// console.log('test', process.env.DATABASE_URL)
-// const connectionString = process.env.DATABASE_URL;
+console.log('test', process.env.DATABASE_URL)
+const connectionString = process.env.DATABASE_URL;
 
-// if (!connectionString) {
-//   throw new Error('❌ DATABASE_URL is not set in .env');
-// }
+if (!connectionString) {
+  throw new Error('❌ DATABASE_URL is not set in .env');
+}
 
 // Create Neon pool
-// const pool = new Pool({ connectionString });
+const pool = new Pool({ connectionString });
 
 // Create Prisma adapter using the pool
-// const adapter = new PrismaNeon(pool);
+const adapter = new PrismaNeon(pool);
 
 // Export Prisma Client instance with adapter and $extends
-export const prisma = new PrismaClient().$extends({
+export const prisma = new PrismaClient({adapter}).$extends({
   result: {
     product: {
       price: {
