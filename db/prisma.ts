@@ -1,12 +1,42 @@
-import { PrismaClient } from "@prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
-import { Pool } from "@neondatabase/serverless";
-import ws from "ws";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-// for Next.js or serverless
-globalThis.WebSocket = ws;
+import { neonConfig } from '@neondatabase/serverless';
+// import { PrismaNeon } from '@prisma/adapter-neon';
+import { PrismaClient } from '@prisma/client';
+import ws from 'ws';
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL! });
-const adapter = new PrismaNeon(pool);
+// Set up WebSocket support for Neon
+neonConfig.webSocketConstructor = ws;
 
-export const prisma = new PrismaClient({ adapter });
+// Ensure connection string is available
+// console.log('test', process.env.DATABASE_URL)
+// const connectionString = process.env.DATABASE_URL;
+
+// if (!connectionString) {
+//   throw new Error('❌ DATABASE_URL is not set in .env');
+// }
+
+// Create Neon pool
+// const pool = new Pool({ connectionString });
+
+// Create Prisma adapter using the pool
+// const adapter = new PrismaNeon(pool);
+
+// Export Prisma Client instance with adapter and $extends
+export const prisma = new PrismaClient().$extends({
+  result: {
+    product: {
+      price: {
+        compute(product) {
+          return product.price.toString();
+        },
+      },
+      rating: {
+        compute(product) {
+          return product.rating.toString(); 
+        },
+      },
+    },
+  },
+});
