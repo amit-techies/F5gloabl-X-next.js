@@ -4,9 +4,8 @@ import { prisma } from "@/db/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compareSync } from "bcrypt-ts-edge";
 import type { NextAuthConfig } from "next-auth";
-import { NextResponse } from "next/server";
+// import { NextResponse } from "next/server";
 // import { randomUUID } from "crypto";
-import { randomUUID } from "crypto";
 
 export const config = {
   pages: {
@@ -87,27 +86,28 @@ export const config = {
 
       return token;
     },
-    authorized({request, auth}: any){
-      //check for session cart cookie
-      if(!request.cookies.get('sessionCartId')){
-       const sessionCartId = randomUUID();
-       console.log('bushdh',sessionCartId);
-       //clone the req headers
-       const newRequestHeaders = new Headers(request.headers);
+    // authorized({request, auth}: any){
+    //   //check for session cart cookie
+    //   if(!request.cookies.get('sessionCartId')){
+    //    const sessionCartId = crypto.randomUUID();
 
-       //create new response and header
-       const response = NextResponse.next({
-        request:{
-          headers: newRequestHeaders
-        }
-       });
-       //set newly generated sessionCartId in the response cookies
-       response.cookies.set('sessionCartId', sessionCartId);
-       return response;
-      }else{
-        return true;
-      }
-    }
+    //    console.log('bushdh',sessionCartId);
+    //    //clone the req headers
+    //    const newRequestHeaders = new Headers(request.headers);
+
+    //    //create new response and header
+    //    const response = NextResponse.next({
+    //     request:{
+    //       headers: newRequestHeaders
+    //     }
+    //    });
+    //    //set newly generated sessionCartId in the response cookies
+    //    response.cookies.set('sessionCartId', sessionCartId);
+    //    return response;
+    //   }else{
+    //     return true;
+    //   }
+    // }
   },
 } satisfies NextAuthConfig;
 
