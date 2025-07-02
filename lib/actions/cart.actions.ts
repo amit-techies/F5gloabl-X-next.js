@@ -8,8 +8,7 @@ import { prisma } from "@/db/prisma";
 import { cartItemSchema, insertCartSchema } from "../validators";
 import { revalidatePath } from "next/cache";
 
-// calculate cart prices
-
+// Price Calculation
 const calcPrice = (items: CartItem[]) => {
   const itemsPrice = round2(
       items.reduce((acc, item) => acc + Number(item.price) * item.qty, 0)
@@ -26,50 +25,50 @@ const calcPrice = (items: CartItem[]) => {
   };
 };
 
+// ✅ Main action function
 export async function addItemToCart(data: CartItem) {
   try {
-    //check for cart cokkies
     const sessionCartId = (await cookies()).get("sessionCartId")?.value;
     if (!sessionCartId) throw new Error("Cart session not found");
 
-    //Get session and user id
     const session = await auth();
     const userId = session?.user?.id ? (session.user.id as string) : undefined;
 
-    //Get cart
+    // ✅ Validate that user exists if userId is present
+    let validUserId: string | undefined = undefined;
+    if (userId) {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (user) {
+        validUserId = userId;
+      }
+    }
+
     const cart = await getMyCart();
 
-    // parse and validate item
-
     const item = cartItemSchema.parse(data);
-
-    //finding product in database
     const product = await prisma.product.findFirst({
       where: { id: item.productId },
     });
-    if (!product) throw new Error("product not found");
+    if (!product) throw new Error("Product not found");
 
     if (!cart) {
-      //create new cart object
+      // ✅ Create new cart
       const newCart = insertCartSchema.parse({
-        userId: userId,
+        userId: validUserId, // safe userId (null/undefined allowed)
         items: [item],
-        sessionCartId: sessionCartId,
+        sessionCartId,
         ...calcPrice([item]),
       });
 
-      // add to database
-      await prisma.cart.create({
-        data: newCart,
-      });
-      //revalidate product page
-      revalidatePath(`/product/${product.slug}`);
+      await prisma.cart.create({ data: newCart });
 
-      return {
-        success: true,
-        message: "Item added to cart",
-      };
+      revalidatePath(`/product/${product.slug}`);
+      return { success: true, message: "Item added to cart" };
     }
+
+    // 🚧 Extend here for updating cart if it exists
+    return { success: false, message: "Cart already exists" };
+
   } catch (error) {
     return {
       success: false,
@@ -78,22 +77,20 @@ export async function addItemToCart(data: CartItem) {
   }
 }
 
+// Helper: Get Cart
 export async function getMyCart() {
   const sessionCartId = (await cookies()).get("sessionCartId")?.value;
   if (!sessionCartId) throw new Error("Cart session not found");
 
-  //Get session and user id
   const session = await auth();
   const userId = session?.user?.id ? (session.user.id as string) : undefined;
 
-  // Get user cart from database
   const cart = await prisma.cart.findFirst({
-    where: userId ? { userId: userId } : { sessionCartId: sessionCartId },
+    where: userId ? { userId } : { sessionCartId },
   });
 
   if (!cart) return undefined;
 
-  //Convert decimals and return
   return convertToPlainObject({
     ...cart,
     items: cart.items as CartItem[],

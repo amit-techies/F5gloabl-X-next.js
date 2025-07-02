@@ -1,11 +1,22 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "Product" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "name" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "category" TEXT NOT NULL,
+    "images" TEXT[],
+    "brand" TEXT NOT NULL,
+    "stock" INTEGER NOT NULL,
+    "price" DECIMAL(12,2) NOT NULL DEFAULT 0,
+    "rating" DECIMAL(3,2) NOT NULL DEFAULT 0,
+    "numReviews" INTEGER NOT NULL DEFAULT 0,
+    "isFeatured" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "banner" TEXT,
 
-  - Made the column `brand` on table `Product` required. This step will fail if there are existing NULL values in that column.
-
-*/
--- AlterTable
-ALTER TABLE "Product" ALTER COLUMN "brand" SET NOT NULL;
+    CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -77,6 +88,9 @@ CREATE TABLE "Cart" (
 
     CONSTRAINT "Cart_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "product_slug_idx" ON "Product"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_idx" ON "User"("email");

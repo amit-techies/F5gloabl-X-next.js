@@ -11,10 +11,10 @@ const AddToCart = ({ item }: { item: CartItem }) => {
   const router = useRouter();
 
   const handleAddToCart = async () => {
-    const res = await addItemToCart(item);
+    const rest = await addItemToCart(item);
 
-    if (!res.success) {
-      toast.error(res.message); 
+    if (!rest.success) {
+      toast.error(rest.message); 
       return;
     }
 
