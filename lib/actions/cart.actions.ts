@@ -52,9 +52,9 @@ export async function addItemToCart(data: CartItem) {
     if (!product) throw new Error("Product not found");
 
     if (!cart) {
-      // ✅ Create new cart
+      // Create new cart
       const newCart = insertCartSchema.parse({
-        userId: validUserId, // safe userId (null/undefined allowed)
+        userId: validUserId,
         items: [item],
         sessionCartId,
         ...calcPrice([item]),
@@ -63,12 +63,38 @@ export async function addItemToCart(data: CartItem) {
       await prisma.cart.create({ data: newCart });
 
       revalidatePath(`/product/${product.slug}`);
-      return { success: true, message: "Item added to cart" };
+      return { success: true, message: `${product.name} added to cart` };
+    } else {
+      const existItem = (cart.items as CartItem[]).find(
+        (x) => x.productId === item.productId
+      );
+
+      if (existItem) {
+        if (product.stock < existItem.qty + 1) {
+          throw new Error("Not enough stock");
+        }
+        existItem.qty += 1;
+      } else {
+        if (product.stock < 1) throw new Error("Not enough stock");
+        cart.items.push(item);
+      }
+
+      await prisma.cart.update({
+        where: { id: cart.id },
+        data: {
+          items: cart.items,
+          ...calcPrice(cart.items as CartItem[]),
+        },
+      });
+
+      revalidatePath(`/product/${product.slug}`);
+      return {
+        success: true,
+        message: `${product.name} ${
+          existItem ? "updated in" : "added to"
+        } cart`,
+      };
     }
-
-    // 🚧 Extend here for updating cart if it exists
-    return { success: false, message: "Cart already exists" };
-
   } catch (error) {
     return {
       success: false,
