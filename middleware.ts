@@ -33,7 +33,10 @@ export async function middleware(request: NextRequest) {
   );
 
   if (isProtected) {
-    const token = await getToken({ req: request });
+    const token = await getToken({ 
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET // Add this line
+    });
 
     if (!token) {
       const signInUrl = new URL("/sign-in", request.url);
@@ -44,7 +47,6 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
-// Required by Next.js to match routes for middleware
 export const config = {
   matcher: [
     "/((?!_next|api|favicon.ico|assets|static).*)",
