@@ -14,7 +14,7 @@ export const signUpDefaultValues= {
     password:'',
     confirmpassword:'',
 };
-
+  
 export const shippingAddressDefaultValues = {
     fullName: 'Kulwinder',
     streetAddress: '8b Industrial area',
