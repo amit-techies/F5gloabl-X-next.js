@@ -28,8 +28,10 @@ const ShippingAddressPage = async () => {
 
   // Fail gracefully if no user ID
   if (!userId) {
+    
     console.error(" No user ID found in session:", session);
     return <div>Error: User not authenticated.</div>;
+    
   }
 
   const user = await getUserById(userId);
@@ -42,4 +44,4 @@ const ShippingAddressPage = async () => {
   );
 };
 
-export default ShippingAddressPage;
+export default ShippingAddressPage; 

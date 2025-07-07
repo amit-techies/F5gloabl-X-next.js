@@ -1,6 +1,5 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { shippingAddress } from "@/types";
 import { toast } from "sonner";
 import { useTransition } from "react";
 import { shippingAddress } from "@/types";
@@ -29,7 +28,7 @@ const ShippingAddresForm = ({ address }: { address: shippingAddress }) => {
   });
 
   const [isPending, startTransition] = useTransition();
-  const onSubmit = (values) =>{
+  const onSubmit = (values :any) =>{
   console.log(values);
   }
 

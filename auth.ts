@@ -53,7 +53,7 @@ export const config = {
   ],
   callbacks: {
     async session({ session, user, trigger, token }: any) {
-      // ✅ Ensure user.id is available in session
+      // Ensure user.id is available in session
       session.user.id = token.id;
       session.user.role = token.role;
       session.user.name = token.name;
@@ -66,7 +66,7 @@ export const config = {
     },
     async jwt({ token, user, trigger, session }: any) {
       if (user) {
-        token.id = user.id;         // ✅ Add this line
+        token.id = user.id;         // Add this line
         token.role = user.role;
 
         if (user.name === "NO_NAME") {
@@ -105,9 +105,22 @@ export const config = {
 
       return token;
     },
-    // authorized({request, auth}: any){
-    //   //cookie check logic
-    // }
+  authorized({ request, auth }) {
+  const protectedPaths = [
+    /\/shipping-address/,
+    /\/payment-method/,
+    /\/place-order/,
+    /\/profile/,
+    /\/user\/(.*)/,
+    /\/order\/(.*)/,
+    /\/admin/,
+  ];
+  const { pathname } = request.nextUrl;
+
+  if (!auth && protectedPaths.some((p) => p.test(pathname))) return false;
+
+  // return true; // Allow by default
+}
   },
 } satisfies NextAuthConfig;
 
