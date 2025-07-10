@@ -2,13 +2,6 @@ import { z } from "zod";
 import { formatNumberwithDecimalPlaces } from "@/lib/utils";
 import { PAYMENT_METHODS } from "./constants";
 
-// const currency = z
-//   .string()
-//   .refine(
-//     (value) =>
-//       /^\d+(\.\d{2})?$/.test(formatNumberwithDecimalPlaces(Number(value))),
-//     "Price must be a valid number with two decimal places"
-//   );
 
 const currency = z
   .union([z.string(), z.number()])
@@ -95,17 +88,6 @@ export const paymentMethodSchema = z
   });
 
 // schema for inserting order
-// export const insertOrderSchema = z.object({
-//   userId: z.string().min(1, "user is required"),
-//   itemsPrice: currency,
-//   totalPrice: currency,
-//   shippingPrice: currency,
-//   taxPrice: currency,
-//   paymentMethod: z.string().refine((data)=>PAYMENT_METHODS.includes(data),{
-//     message:'invalid payment method'
-//   }),
-//   shippingAddress: shippingAddressSchema
-// });
 export const insertOrderSchema = z.object({
   userId: z.string().min(1, "user is required"),
   itemsPrice: currency, // ✅ MATCHES Prisma model
@@ -130,4 +112,12 @@ export const insertOrderItemSchema = z.object({
   name: z.string(),
   price: currency,
   qty: z.number()
+});
+
+// Schema for the PayPal paymentResult
+export const paymentResultSchema = z.object({
+  id: z.string(),
+  status: z.string(),
+  email_address: z.string(),
+  pricePaid: z.string(),
 });

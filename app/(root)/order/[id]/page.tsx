@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import { getOrderById } from "@/lib/actions/order.actions";
 import { notFound } from "next/navigation";
+import OrderDetailsTable from "./order-details-table";
+import { shippingAddress } from "@/types";
 
 
 export const metadata:Metadata = {
@@ -18,7 +20,12 @@ const orderDeatilsPage = async (props:{
     if(!order) notFound();
 
 
-    return ( <>details {order.totalPrice}</> );
+    return <OrderDetailsTable order={{
+        ...order,
+        shippingAddress: order.shippingAddress as shippingAddress,
+    }} 
+    PaypalClientId={process.env.PAYPAL_CLIENT_ID || 'sb'}
+    />;
 }
  
 export default orderDeatilsPage;
