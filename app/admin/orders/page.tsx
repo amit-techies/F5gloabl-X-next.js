@@ -15,7 +15,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import DeleteDialog from "@/components/shared/delete-dialog";
 
-export const metaData: Metadata = {
+export const metadata: Metadata = {
     title: 'Admin Orders'
 }
 
