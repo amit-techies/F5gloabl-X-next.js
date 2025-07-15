@@ -26,7 +26,8 @@ const CartTable = ({ cart }: { cart?: Cart }) => {
   const [isPending, startTransition] = useTransition();
   const handleClick = () => {
     console.log("check /shipping-address")
-    startTransition(() => router.push('/shipping-address'))
+     router.push('/shipping-address');
+    // startTransition(() => router.push('/shipping-address'))
   }
   return (
     <>
