@@ -49,6 +49,12 @@ const UserButton = async () => {
                <DropdownMenuItem>
                 <Link href='/user/orders' className="w-full">Order History</Link>
                </DropdownMenuItem>
+                   
+              {session?.user?.role === 'admin' && (
+               <DropdownMenuItem>
+                <Link href='/admin/overview' className="w-full">Admin</Link>
+               </DropdownMenuItem>
+              )}
 
                 <DropdownMenuItem className="p-0 mb-1">
                     <form action={signOutUser} className="w-full">

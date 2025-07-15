@@ -7,9 +7,16 @@ const LoadingPage = () => {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
-        width: '100vw',}}>
-        <Image src={loader} alt="Loading..." width={150} height={150} />
+        width: '100vw',
+    }}>
+        <Image
+            src={loader}
+            alt="Loading..."
+            width={150}
+            height={150}
+            style={{ width: '150px', height: 'auto' }}
+        />
     </div>;
 }
- 
+
 export default LoadingPage;
