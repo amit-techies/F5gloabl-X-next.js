@@ -1,6 +1,6 @@
 "use client";
 
-import { toast } from 'sonner'; 
+import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useTransition } from "react";
 import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.actions";
@@ -22,9 +22,12 @@ import { formatCurrency } from '@/lib/utils';
 
 
 const CartTable = ({ cart }: { cart?: Cart }) => {
-    const router = useRouter();
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
-
+  const handleClick = () => {
+    console.log("check /shipping-address")
+    startTransition(() => router.push('/shipping-address'))
+  }
   return (
     <>
       <h1 className="py-4 h2-bold">Shoping Cart</h1>
@@ -101,22 +104,22 @@ const CartTable = ({ cart }: { cart?: Cart }) => {
           </div>
           <Card>
             <CardContent className='p-4 gap-4'>
-                <div className="pb-3 text-xl">
-              Subtotal({cart.items.reduce((a,c) => a + c.qty, 0  )}):
-              <span className="font-bold">
-                {formatCurrency(cart.itemsPrice)}
-              </span>
-                </div>
-            <Button className='w-full' disabled={isPending} onClick={ () =>
-                startTransition(() => router.push('/shipping-address'))}>
-                    {isPending ? (
-                        <Loader className='w-4 h-4 animate-spin' />
+              <div className="pb-3 text-xl">
+                Subtotal({cart.items.reduce((a, c) => a + c.qty, 0)}):
+                <span className="font-bold">
+                  {formatCurrency(cart.itemsPrice)}
+                </span>
+              </div>
+              <Button className='w-full' disabled={isPending} onClick={handleClick}>
 
-                    ) : (
-                        <ArrowRight className='w-4 h-4' />
-                    )}{' '}
-                    Proceed to Checkout
-                </Button>
+                {isPending ? (
+                  <Loader className='w-4 h-4 animate-spin' />
+
+                ) : (
+                  <ArrowRight className='w-4 h-4' />
+                )}{' '}
+                Proceed to Checkout
+              </Button>
             </CardContent>
           </Card>
         </div>
