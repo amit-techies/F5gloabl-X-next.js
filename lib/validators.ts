@@ -11,18 +11,33 @@ const currency = z
     "Price must be a valid number with two decimal places"
   );
 
-
+// Schema for inserting products
 export const insertProductSchema = z.object({
-  name: z.string().min(3, "Name is required"),
-  slug: z.string().min(3, "Slug is required"),
-  category: z.string().min(3, "Category is required"),
-  brand: z.string().min(3, "Brand is required").nullable(), // ✅ FIXED
-  description: z.string().min(3, "Description is required"),
+  // name: z.string().min(3, "Name is required"),
+  // slug: z.string().min(3, "Slug is required"),
+  // category: z.string().min(3, "Category is required"),
+  // brand: z.string().min(3, "Brand is required").nullable().transform(val => val ?? ''), 
+  // description: z.string().min(3, "Description is required"),
+  // stock: z.coerce.number(),
+  // images: z.array(z.string()).min(1, "At least one image is required"),
+  // isFeatured: z.boolean(),
+  // banner: z.string().nullable(),
+  // price: currency,
+  name: z.string().min(3, 'Name is required'),
+  slug: z.string().min(3, 'Slug is required'),
+  category: z.string().min(3, 'Category is required'),
+  brand: z.string(), 
+  description: z.string().min(3, 'Description is required'),
   stock: z.coerce.number(),
   images: z.array(z.string()).min(1, "At least one image is required"),
   isFeatured: z.boolean(),
-  banner: z.string().nullable(),
-  price: currency,
+  banner: z.string().nullable(), // ✅ Allow null
+  price: z.union([z.string(), z.number()]), // ✅ Accept string or number
+});
+
+// Schema for updating products
+export const updateProductSchema = insertProductSchema.extend({
+  id: z.string().min(1, 'Id is required'),
 });
 
 // schema for  signing user in
@@ -127,3 +142,28 @@ export const updateProfileSchema = z.object({
   name:z.string().min(3,'Name must be atleast 3 characters'),
   email:z.string().min(3,'Name must be atleast 3 characters'),
 })
+
+
+
+
+// // Base schema for product (common fields)
+// const baseProductSchema = z.object({
+//   name: z.string().min(1, 'Name is required'),
+//   slug: z.string().min(1, 'Slug is required'),
+//   category: z.string().min(1, 'Category is required'),
+//   brand: z.string().nullable(), // ✅ Allow null for brand
+//   description: z.string().min(1, 'Description is required'),
+//   stock: z.number().min(0, 'Stock must be 0 or more'),
+//   images: z.array(z.string()),
+//   isFeatured: z.boolean(),
+//   banner: z.string().nullable(), // ✅ Allow null
+//   price: z.union([z.string(), z.number()]), // ✅ Accept string or number
+// });
+
+// // Schema for inserting products
+// export const insertProductSchema1 = baseProductSchema;
+
+// // Schema for updating products (adds `id`)
+// export const updateProductSchema1 = baseProductSchema.extend({
+//   id: z.string().min(1, 'Id is required'),
+// });

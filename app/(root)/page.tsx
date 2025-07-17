@@ -11,13 +11,15 @@ const Homepage = async () => {
     rating: p.rating.toString(), 
   }));
  
+  
   return (
     <ProductList
       data={latestproduct}
       title="Featured Products"
-      limit={4}
+      limit={10}
     /> 
-  );
+    
+  ); 
 };
 
 export default Homepage;
