@@ -6,7 +6,7 @@ import { getMyCart } from "./cart.actions";
 import { getUserById } from "./user.actions";
 import { insertOrderSchema } from "../validators";
 import { prisma } from "@/db/prisma";
-import { CartItem ,PaymentResult, shippingAddress } from "@/types";
+import { CartItem, PaymentResult, shippingAddress } from "@/types";
 import { paypal } from "../paypal";
 import { revalidatePath } from "next/cache";
 import { PAGE_SIZE } from '../constants';
@@ -54,9 +54,9 @@ export async function createOrder() {
       userId: user.id,
       shippingAddress: user.address,
       paymentMethod: user.paymentMethod,
-      itemsPrice: cart.itemsPrice.toString(), 
+      itemsPrice: cart.itemsPrice.toString(),
       shippingPrice: cart.shippingPrice.toString(),
-      taxPrice: cart.taxPrice.toString(), 
+      taxPrice: cart.taxPrice.toString(),
       totalPrice: cart.totalPrice.toString(),
     });
 
@@ -75,7 +75,7 @@ export async function createOrder() {
           // paidAt: new Date(), // or null if you want to change your model to optional
           // deliveredAt: new Date(), // or null
         },
-      }); 
+      });
 
       // Create order items from cart
       for (const item of cart.items as CartItem[]) {
@@ -123,14 +123,14 @@ export async function createOrder() {
 
 
 // get order by id
-export async function getOrderById(orderId: string){
+export async function getOrderById(orderId: string) {
   const data = await prisma.order.findFirst({
-    where:{
-      id:orderId
+    where: {
+      id: orderId
     },
-    include:{
+    include: {
       orderItems: true,
-      user:{select:{name:true,email:true}},
+      user: { select: { name: true, email: true } },
     }
   })
   return convertToPlainObject(data);
@@ -280,7 +280,7 @@ export async function updateOrderToPaid({
 }
 
 // Get user's orders
-export async function getMyOrders({limit = PAGE_SIZE,page,}: {limit?: number;page: number;}) {
+export async function getMyOrders({ limit = PAGE_SIZE, page, }: { limit?: number; page: number; }) {
   const session = await auth();
   if (!session) throw new Error('User is not authorized');
 
@@ -349,8 +349,23 @@ export async function getOrderSummary() {
 }
 
 // Get all orders
-export async function getAllOrders({ limit: PAGE_SIZE = 10, page }: { limit?: number; page: number }) {
+export async function getAllOrders({
+  limit: PAGE_SIZE = 10, page, query }:
+  { limit?: number; page: number; query: string }) {
+
+const queryFilter: Prisma.OrderWhereInput = query && query !== 'all'?{
+  user:{
+    name:{
+      contains:query,
+      mode:'insensitive'
+    } as Prisma.StringFilter
+  }
+}:{};
+
   const data = await prisma.order.findMany({
+    where:{
+        ...queryFilter
+    },
     orderBy: { createdAt: 'desc' },
     take: PAGE_SIZE,
     skip: (page - 1) * PAGE_SIZE,

@@ -26,7 +26,7 @@ export const insertProductSchema = z.object({
   name: z.string().min(3, 'Name is required'),
   slug: z.string().min(3, 'Slug is required'),
   category: z.string().min(3, 'Category is required'),
-  brand: z.string(), 
+  brand: z.string().nullable(), // ✅ Allow null for brand
   description: z.string().min(3, 'Description is required'),
   stock: z.coerce.number(),
   images: z.array(z.string()).min(1, "At least one image is required"),
@@ -143,27 +143,8 @@ export const updateProfileSchema = z.object({
   email:z.string().min(3,'Name must be atleast 3 characters'),
 })
 
-
-
-
-// // Base schema for product (common fields)
-// const baseProductSchema = z.object({
-//   name: z.string().min(1, 'Name is required'),
-//   slug: z.string().min(1, 'Slug is required'),
-//   category: z.string().min(1, 'Category is required'),
-//   brand: z.string().nullable(), // ✅ Allow null for brand
-//   description: z.string().min(1, 'Description is required'),
-//   stock: z.number().min(0, 'Stock must be 0 or more'),
-//   images: z.array(z.string()),
-//   isFeatured: z.boolean(),
-//   banner: z.string().nullable(), // ✅ Allow null
-//   price: z.union([z.string(), z.number()]), // ✅ Accept string or number
-// });
-
-// // Schema for inserting products
-// export const insertProductSchema1 = baseProductSchema;
-
-// // Schema for updating products (adds `id`)
-// export const updateProductSchema1 = baseProductSchema.extend({
-//   id: z.string().min(1, 'Id is required'),
-// });
+// Schema to update users
+export const updateUserSchema = updateProfileSchema.extend({
+  id: z.string().min(1, 'ID is required'),
+  role: z.string().min(1, 'Role is required'),
+});
