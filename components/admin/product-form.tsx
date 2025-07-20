@@ -161,7 +161,7 @@ const ProductForm = ({ type, product, productId }: {
                                 <Input
                                     placeholder="Enter brand"
                                     {...field}
-                                    value={field.value ?? ''} 
+                                    value={field.value ?? ''}
                                 />
                             </FormControl>
                             <FormMessage />
@@ -216,16 +216,30 @@ const ProductForm = ({ type, product, productId }: {
                             <Card>
                                 <CardContent className='space-y-2 mt-2 min-h-48'>
                                     <div className='flex-start space-x-2'>
-                                        {images.map((image: string) => (
-                                            <Image
-                                                key={image}
-                                                src={image}
-                                                alt='product image'
-                                                className='w-20 h-20 object-cover object-center rounded-sm'
-                                                width={100}
-                                                height={100}
-                                            />
-                                        ))}
+                                        <div className="flex flex-wrap gap-2">
+                                            {images.map((image: string, index: number) => (
+                                                <div key={index} className="relative group">
+                                                    <Image
+                                                        src={image}
+                                                        alt={`product image ${index + 1}`}
+                                                        className="w-20 h-20 object-cover object-center rounded-sm"
+                                                        width={80}
+                                                        height={80}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const newImages = images.filter((_, i) => i !== index);
+                                                            form.setValue('images', newImages, { shouldValidate: true });
+                                                        }}
+                                                        className="absolute top-[-8px] right-[-8px] bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center z-10 group-hover:opacity-100 opacity-0 transition-opacity duration-200"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+
                                         <FormControl>
                                             <UploadButton
                                                 endpoint='imageUploader'
@@ -269,13 +283,25 @@ const ProductForm = ({ type, product, productId }: {
                         {isFeatured && (
                             <>
                                 {banner && typeof banner === 'string' ? (
-                                    <Image
-                                        src={banner}
-                                        alt="banner image"
-                                        className="w-full object-cover object-center rounded-sm"
-                                        width={1920}
-                                        height={680}
-                                    />
+                                    <div className="relative group w-full">
+                                        <Image
+                                            src={banner}
+                                            alt="banner image"
+                                            className="w-full object-cover object-center rounded-sm"
+                                            width={1920}
+                                            height={680}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                form.setValue('banner', '', { shouldValidate: true });
+                                            }}
+                                            className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center z-10 group-hover:opacity-100 opacity-0 transition-opacity duration-200"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+
                                 ) : (
                                     <UploadButton
                                         endpoint="imageUploader"
