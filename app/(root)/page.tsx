@@ -3,6 +3,8 @@ import ProductList from "@/components/shared/product/product-list";
 import { Product } from "@/types";
 import ProductCarousel from "@/components/shared/product/product-carousel";
 import ViewAllProducts from "@/components/view-all-products-button";
+import IconBoxes from "@/components/icon-boxes";
+import DealCountdown from "@/components/deal-countdown";
 
 const Homepage = async () => {
   const rawProducts = await getLatestProducts();
@@ -29,6 +31,8 @@ const Homepage = async () => {
       />
       
       <ViewAllProducts/>
+      <IconBoxes/>
+      <DealCountdown/>
     </>
   );
 };

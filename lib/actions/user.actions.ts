@@ -12,7 +12,7 @@ import { revalidatePath } from "next/cache";
 import { updateUserSchema } from "../validators";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/db/prisma";
-
+import { getMyCart } from "./cart.actions";
 
 // sign in the user with credentials
 export async function signInWithCredntials(prevState: unknown,
@@ -34,8 +34,14 @@ export async function signInWithCredntials(prevState: unknown,
 }
 
 // sign user out
+// export async function signOutUser() {
+//    await signOut();
+// }
 export async function signOutUser() {
-   await signOut();
+  // get current users cart and delete it so it does not persist to next user
+  const currentCart = await getMyCart();
+  await prisma.cart.delete({ where: { id: currentCart?.id } });
+  await signOut();
 }
 
 // sign up user
