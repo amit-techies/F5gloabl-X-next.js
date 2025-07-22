@@ -17,7 +17,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Image from "next/image";
-import { format } from "path";
 import { formatCurrency } from "@/lib/utils";
 import PlaceOrderForm from "./place-order-form";
 

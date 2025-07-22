@@ -11,6 +11,7 @@ import { paypal } from "../paypal";
 import { revalidatePath } from "next/cache";
 import { PAGE_SIZE } from '../constants';
 import { Prisma } from "@prisma/client";
+import { sendPurchaseReceipt } from "@/email";
 
 
 // Create order and order items
@@ -277,6 +278,25 @@ export async function updateOrderToPaid({
   });
 
   if (!updatedOrder) throw new Error('Order not found');
+  console.log('Sending purchase receipt email...', order?.userId);
+
+  // sendPurchaseReceipt({
+  //   order: {
+  //     ...updatedOrder,
+  //     shippingAddress: updatedOrder.shippingAddress as shippingAddress,
+  //     paymentResult: updatedOrder.paymentResult as PaymentResult,
+  //   },
+  // });
+
+  // Send confirmation email
+console.log('📩 Preparing to send purchase receipt to', updatedOrder.user.email);
+await sendPurchaseReceipt({
+  order: {
+    ...updatedOrder,
+    shippingAddress: updatedOrder.shippingAddress as shippingAddress,
+    paymentResult: updatedOrder.paymentResult as PaymentResult,
+  },
+  });
 }
 
 // Get user's orders
