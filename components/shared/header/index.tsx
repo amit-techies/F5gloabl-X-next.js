@@ -12,13 +12,13 @@ const Header = () => {
                 <CategoryDrawer />
                 <Link href="/" className="flex-start ml-4">
                     <Image
-                        src="/images/logo.svg"
+                        src="/images/1678791020_5-01.webp"
                         alt={`${APP_NAME} Logo`}
                         width={48}
                         height={48}
                         priority={true}
                     />
-                    <span className="hidden lg:block text-2xl font-bold ml-3">{APP_NAME}</span>
+                    {/* <span className="hidden lg:block text-2xl font-bold ml-3">{APP_NAME}</span> */}
                 </Link>
             </div>
 
