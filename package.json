@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@prisma/client": "^6.11.1",
+    "@prisma/client": "^6.12.0",
     "@react-email/preview-server": "^4.2.3",
     "@tailwindcss/postcss": "^4",
     "@types/jest": "^30.0.0",
@@ -67,7 +67,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "jest": "^30.0.4",
-    "prisma": "^6.11.1",
+    "prisma": "^6.12.0",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",

@@ -30,7 +30,7 @@ if (session) {
         <Card>
             <CardHeader className="space-y-4">
              <Link href='/' className='flex-center'>
-             <Image src='/images/logo.svg' width={100} height={100} alt={`${APP_NAME} logo`} priority={true}></Image>
+             <Image src='/images/logo.png' width={100} height={100} alt={`${APP_NAME} logo`} priority={true}></Image>
              </Link>
              <CardTitle className="text-center">Create Account</CardTitle>
              <CardDescription className="text-center">
