@@ -18,7 +18,7 @@ export const signUpDefaultValues= {
 export const shippingAddressDefaultValues = {
     fullName: 'Amit',
     streetAddress: 'Ghraoh',
-    city: 'Dharamsala',
+    city: 'Dharamsala, Kangra',
     postalCode: '176215',
     country: 'India',
 }
