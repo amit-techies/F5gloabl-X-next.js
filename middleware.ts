@@ -38,6 +38,9 @@ export async function middleware(request: NextRequest) {
       secret: process.env.NEXTAUTH_SECRET // Add this line
     });
 
+    console.log("🔑 TOKEN FROM MIDDLEWARE:", token);
+
+
     if (!token) {
       const signInUrl = new URL("/sign-in", request.url);
       return NextResponse.redirect(signInUrl);
