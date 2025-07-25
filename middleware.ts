@@ -33,12 +33,27 @@ export async function middleware(request: NextRequest) {
   );
 
   if (isProtected) {
-    const token = await getToken({ 
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET // Add this line
-    });
 
-    console.log("🔑 TOKEN FROM MIDDLEWARE:", token);
+
+const token =
+  (await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+    cookieName: '__Secure-authjs.session-token',
+  })) ||
+  (await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+    cookieName: 'next-auth.session-token',
+  }));
+
+
+
+
+    
+ 
+
+    console.log("🔑 TOKEN FROM MIDDLEWARE:", process.env.NEXTAUTH_SECRET);
 
 
     if (!token) {
